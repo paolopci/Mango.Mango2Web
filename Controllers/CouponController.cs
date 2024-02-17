@@ -46,7 +46,7 @@ namespace Mango.Web.Controllers
                 ResponseDto? response = await _couponService.CreateCouponAsync(couponDto);
                 if (response != null && response.IsSuccess)
                 {
-                    TempData["success"] = "Coupon created successfully";
+                    TempData["success"] = "Coupon created successfully"; 
                     return RedirectToAction(nameof(CouponIndex));
 
                 }
