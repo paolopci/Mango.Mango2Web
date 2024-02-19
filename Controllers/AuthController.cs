@@ -47,8 +47,9 @@ namespace Mango.Web.Controllers
             }
             else
             {
-                ModelState.AddModelError("CustomError", responseDto.Message);
+                TempData["error"] = responseDto.Message;
                 return View(model);
+
             }
         }
 
