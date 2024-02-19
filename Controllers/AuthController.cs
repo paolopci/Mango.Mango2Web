@@ -43,5 +43,42 @@ namespace Mango.Web.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegistrationRequestDto model)
+        {
+            ResponseDto result = await _authService.RegisterAsync(model);
+            ResponseDto assignRole;
+
+            if (result != null && result.IsSuccess)
+            {
+                if (string.IsNullOrEmpty(model.Role))
+                {
+                    model.Role = SD.RoleCustomer;
+                }
+
+                assignRole = await _authService.AssignRoleAsync(model);
+                if (assignRole != null && assignRole.IsSuccess)
+                {
+                    TempData["success"] = "Registration Successful";
+                    return RedirectToAction(nameof(Login));
+                }
+
+            }
+            else
+            {
+                TempData["error"] = result.Message;
+
+            }
+
+            var roleList = new List<SelectListItem>()
+            {
+                new SelectListItem {Text = SD.RoleAdmin, Value = SD.RoleAdmin},
+                new SelectListItem {Text = SD.RoleCustomer, Value = SD.RoleCustomer},
+            };
+
+            ViewBag.RoleList = roleList;
+            return View();
+        }
     }
 }
