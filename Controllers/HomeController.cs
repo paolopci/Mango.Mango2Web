@@ -2,6 +2,7 @@ using Mango.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Mango.Web.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 
 
@@ -10,15 +11,15 @@ namespace Mango.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-          private readonly IProductService _productService;
+        private readonly IProductService _productService;
 
-          public HomeController(ILogger<HomeController> logger, IProductService productService)
-          {
-              _logger = logger;
-              _productService = productService;
-          }
+        public HomeController(ILogger<HomeController> logger, IProductService productService)
+        {
+            _logger = logger;
+            _productService = productService;
+        }
 
-          public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             List<ProductDto> list = new();
             ResponseDto? response = await _productService.GetAllProductsAsync();
@@ -33,17 +34,40 @@ namespace Mango.Web.Controllers
             }
 
             return View(list);
-
-
-
-
-
-
-
-
-
-            //return View();
         }
+
+        [Authorize]
+        public async Task<IActionResult> ProductDetails(int productId)
+        {
+            ProductDto? model = new();
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
+
+            if (response != null && response.IsSuccess)
+            {
+                model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("ProductDetails")]
+        public async Task<IActionResult> ProductDetails(ProductDto productDto)
+        {
+            
+
+            return View(productDto);
+        }
+
+
+
+
 
         public IActionResult Privacy()
         {
