@@ -91,5 +91,43 @@ namespace Mango.Web.Controllers
              // se modelState is not valid ritorno alla view con couponDto per le correzioni
             return View(model);
         }
+
+
+        public async Task<IActionResult> ProductEdit(int productId)
+        {
+            ResponseDto? response = await _productService.GetProductByIdAsync(productId);
+            if (response != null && response.IsSuccess)
+            {
+                ProductDto? model = JsonConvert.DeserializeObject<ProductDto>(Convert.ToString(response.Result));
+                return View(model);
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProductEdit(ProductDto model)
+        {
+            ResponseDto? response = await _productService.UpdateProductAsync(model);
+            if (response != null && response.IsSuccess)
+            {
+                TempData["success"] = "Product updated successfully";
+                return RedirectToAction(nameof(ProductIndex));
+            }
+            else
+            {
+                TempData["error"] = response?.Message;
+            }
+
+            // se modelState is not valid ritorno alla view con couponDto per le correzioni
+            return View(model);
+        }
     }
+
+    
 }
+

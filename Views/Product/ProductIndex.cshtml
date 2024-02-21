@@ -22,7 +22,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Price</th>
-                    <th>Description</th>
+                  @*   <th>Description</th> *@
                     <th>Category</th>
                     <th>ImageUrl</th>
                     <th></th>
@@ -34,10 +34,11 @@
                     <tr>
                         <td>@prod.Name</td>
                         <td>@((prod.Price).ToString("C"))</td>
-                        <td>@prod.Description</td>
+                       @*  <td>@prod.Description</td> *@
                         <td>@prod.CategoryName</td>
                         <td>@prod.ImageUrl</td>
                         <td>
+                            <a class="btn btn-success" asp-action="ProductEdit" asp-route-productId="@prod.ProductId"><i class="bi bi-pencil-square"></i></a>
                             <a asp-action="ProductDelete" asp-route-productId="@prod.ProductId" class="btn btn-danger"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
