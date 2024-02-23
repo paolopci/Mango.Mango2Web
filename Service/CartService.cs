@@ -10,13 +10,18 @@ namespace Mango.Web.Service
     {
         private readonly IBaseService _baseService;
 
+        public CartService(IBaseService baseService)
+        {
+            _baseService = baseService;
+        }
+
 
         public async Task<ResponseDto?> GetCartByUserIdAsync(string userId)
         {
             return await _baseService.SendAsync(new RequestDto()
             {
                 ApiType = SD.ApiType.GET,
-                Url = SD.ShoppingCartAPIBase + "/api/coupon/GetCart/" + userId
+                Url = SD.ShoppingCartAPIBase + "/api/cart/GetCart/" + userId
             });
         }
 
