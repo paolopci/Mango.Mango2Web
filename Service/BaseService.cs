@@ -65,7 +65,7 @@ namespace Mango.Web.Service
                 apiResponse = await client.SendAsync(message);
 
                 // controllo lo StatusCode della risposta
-                switch (apiResponse.StatusCode)
+                 switch (apiResponse.StatusCode)
                 {
                     case HttpStatusCode.NotFound:
                         return new() { IsSuccess = false, Message = "Not Found" };
