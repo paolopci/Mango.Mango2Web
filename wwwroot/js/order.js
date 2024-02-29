@@ -1,12 +1,49 @@
 ﻿var dataTable;
 $(document).ready(function () {
-    dataTable = $('#tblData').dataTable({
-        "ajax": {
-            url: "/order/getall"  // order è il nome del OrderController and getall del ActionMethod!!!
-        },
+    var url = window.location.search;
+    if (url.includes("approved")) {
+        loadDataTable("approved");
+    }
+    else {
+        if (url.includes("readyforpickup")) {
+            loadDataTable("readyforpickup");
+        }
+        else {
+            if (url.includes("cancelled")) {
+                loadDataTable("cancelled");
+            }
+            else {
+                loadDataTable("all");
+            }
+        }
+    }
+});
+
+function loadDataTable(status) {
+    dataTable = $('#tblData').DataTable({
+        "ajax": { url: "/order/getall?staus=" + status },
         "columns": [
-            { data: 'orderheaderid', "width": "5%"},  // orderheaderId è il nome della columns indice nella tabella OrderHeaderDto!!!
-            { data: 'email', "width": "25%"} // sempre dalla OrderHeaderId il campo email
+            { data: 'orderHeaderId', "width": "5%" },
+            { data: 'email', "width": "25%" },
+            { data: 'name', "width": "20%" },
+            { data: 'phone', "width": "10%" },
+            { data: 'status', "width": "10%" },
+            { data: 'orderTotal', "width": "10%" },
+            {
+                data: 'orderHeaderId',
+                "render": function (data) {
+                    return `<div class="w-75 btn-group" role="group">
+                        <a href="/order/orderDetail?orderId=${data}" class="btn btn-primary mx-2">
+                           <i class="bi bi-pencil-square"></i>
+                        </a>
+                        </div>`
+                }
+            }
         ]
     })
-})
+
+}
+
+// order è il nome del OrderController and getall del ActionMethod!!!
+// orderheaderId è il nome della columns indice nella tabella OrderHeaderDto!!!
+// sempre dalla OrderHeaderId il campo email
