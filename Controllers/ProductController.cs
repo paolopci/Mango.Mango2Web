@@ -112,15 +112,18 @@ namespace Mango.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ProductEdit(ProductDto model)
         {
-            ResponseDto? response = await _productService.UpdateProductAsync(model);
-            if (response != null && response.IsSuccess)
-            {
-                TempData["success"] = "Product updated successfully";
-                return RedirectToAction(nameof(ProductIndex));
-            }
-            else
-            {
-                TempData["error"] = response?.Message;
+            if (ModelState.IsValid) // ho aggiunto il controllo sulla dimensione e il tipo di immagini 
+            {                       // cartella Utility sulla classe ProductDto
+                ResponseDto? response = await _productService.UpdateProductAsync(model);
+                if (response != null && response.IsSuccess)
+                {
+                    TempData["success"] = "Product updated successfully";
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+                else
+                {
+                    TempData["error"] = response?.Message;
+                }
             }
 
             // se modelState is not valid ritorno alla view con couponDto per le correzioni
